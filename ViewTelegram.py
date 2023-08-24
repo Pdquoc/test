@@ -12,12 +12,6 @@ import requests
 import pyward
 import threading
 
-max = threading.Semaphore(value=500) # Decrease this value if you encounter problems with your CPU/RAM usage.
-threads = []
-list = open('proxies.txt', 'r')
-proxies = list.readlines()
-list.close()
-
 def fetchData(channel='google', post='1', proxy=None):
     try:
         r = requests.get('https://t.me/'+channel+'/'+post+'?embed=1', timeout=20, proxies={'https': proxy})
@@ -52,11 +46,27 @@ def run(channel, post, proxy):
     max.release()
     print('Thread with proxy '+proxy+' has been terminated.')
 
-for proxy in proxies:
-    p = proxy.split('\n')[0]
-    thread = threading.Thread(target=run, args=(sys.argv[1], sys.argv[2], p))
-    threads.append(thread)
-    thread.start()
-    print('Started new thread with proxy '+p)
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("python ViewTelegram.py <Link Post>")
+        print("Ví dụ: python ViewTelegram.py https://t.me/channel/post_id")
+        sys.exit(1)
 
-subprocess.call(["python", "-m", "pyward"])
+    link = sys.argv[1]
+    channel, post = link.split('/')[-2:]
+
+    list_path = input("Nhập đường dẫn tới file chứa proxies: ")
+    with open(list_path, 'r') as file:
+        proxies = file.read().splitlines()
+
+    max = threading.Semaphore(value=500) # Decrease this value if you encounter problems with your CPU/RAM usage.
+    threads = []
+
+    for proxy in proxies:
+        p = proxy.split('\n')[0]
+        thread = threading.Thread(target=run, args=(channel, post, p))
+        threads.append(thread)
+        thread.start()
+        print('Started new thread with proxy '+p)
+
+    subprocess.call(["python", "-m", "pyward"])
