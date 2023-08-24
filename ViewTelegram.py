@@ -2,7 +2,6 @@ import os
 import subprocess
 import sys
 import requests
-import pyward
 import threading
 
 subprocess.call(["pip", "install", "requests", "pyaes"])
